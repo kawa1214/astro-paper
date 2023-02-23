@@ -1,4 +1,5 @@
 import satori, { SatoriOptions } from "satori";
+import { html2png, html } from "@astro-content/html2png";
 import { SITE } from "@config";
 
 const fetchFonts = async () => {
@@ -133,7 +134,15 @@ const options: SatoriOptions = {
   ],
 };
 
-const generateOgImage = async (mytext = SITE.title) =>
-  await satori(ogImage(mytext), options);
+const generateOgImage = async (mytext = SITE.title) => {
+  const svg = await satori(ogImage(mytext), options);
+  const markup = html(svg);
+
+  const {
+    responses: { png },
+  } = await html2png({ markup: markup, width: 1200, height: 630 });
+
+  return png[0];
+};
 
 export default generateOgImage;
