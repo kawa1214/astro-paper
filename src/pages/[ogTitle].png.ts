@@ -12,10 +12,12 @@ export const get: APIRoute = async ({ params }) => {
   });
 };
 
-const postImportResult = await getCollection("blog", ({ data }) => !data.draft);
-const posts = Object.values(postImportResult);
-
-export function getStaticPaths() {
+export async function getStaticPaths() {
+  const postImportResult = await getCollection(
+    "blog",
+    ({ data }) => !data.draft
+  );
+  const posts = Object.values(postImportResult);
   return posts
     .filter(({ data }) => !data.ogImage)
     .map(({ data }) => ({
